@@ -1,0 +1,1785 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1220">
+<meta name="referrer" content="no-referrer">
+<title>去火星了也能聊</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%230b1220'/%3E%3Ctext x='8' y='47' font-size='43'%3E🚀%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#0b1220;
+  --panel:#101c2d;
+  --panel2:#152338;
+  --border:#26354b;
+  --text:#edf3fb;
+  --muted:#9aaec5;
+  --soft:#7389a3;
+  --mint:#8be7cf;
+  --mint-dark:#102e28;
+  --red:#ffabb7;
+  --amber:#efd098;
+  --shadow:0 24px 80px #0005;
+  font-family:Inter,"Segoe UI","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--text)}
+button,input,textarea{font:inherit}
+button{cursor:pointer;color:inherit}
+button:disabled{cursor:not-allowed;opacity:.45}
+button,a,input,textarea{-webkit-tap-highlight-color:transparent}
+button{border:0}
+button:focus-visible,a:focus-visible{
+  outline:2px solid var(--mint);outline-offset:4px
+}
+input,textarea{
+  width:100%;border:1px solid var(--border);background:#0c1727;
+  color:var(--text);border-radius:13px;padding:14px 15px;
+  outline:none;transition:border-color .2s,box-shadow .2s
+}
+input:focus,textarea:focus{
+  border-color:#73bcae;box-shadow:0 0 0 3px #8be7cf0b
+}
+input::placeholder,textarea::placeholder{color:var(--soft)}
+button,a{touch-action:manipulation}
+h1,h2,h3,p{margin-top:0}
+a{color:var(--mint)}
+label{display:block;font-size:14px;margin:20px 0 8px}
+small{font-size:12px}
+.muted{color:var(--muted);line-height:1.8}
+.eyebrow{
+  font-size:11px;letter-spacing:2.7px;color:var(--mint);
+  font-weight:600
+}
+.primary,.secondary,.ghost{
+  border-radius:12px;padding:13px 17px;font-weight:600;
+  transition:background .18s,transform .18s
+}
+.primary{background:var(--mint);color:var(--mint-dark)}
+.primary:hover{background:#b0f3df;transform:translateY(-1px)}
+.secondary{
+  background:#1a2a40;color:#d6e4f3;border:1px solid #334660
+}
+.secondary:hover{background:#223650}
+.ghost{background:transparent;color:var(--muted)}
+.ghost:hover{background:#ffffff08;color:var(--text)}
+.wide{width:100%}
+.icon-btn{
+  width:40px;height:40px;display:inline-grid;place-items:center;
+  background:transparent;border-radius:12px;font-size:20px;
+  color:var(--muted);flex-shrink:0
+}
+.icon-btn:hover{background:#ffffff08;color:var(--text)}
+.row{display:flex;align-items:center;gap:10px}
+.error{color:var(--red);font-size:14px;line-height:1.6;min-height:20px}
+.note{font-size:12px;color:var(--muted);line-height:1.8}
+.pill{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:12px;color:var(--muted);border:1px solid var(--border);
+  padding:7px 11px;border-radius:30px;white-space:nowrap
+}
+.pill::before{
+  content:"";width:6px;height:6px;border-radius:50%;background:#8090a5
+}
+.pill.online{color:var(--mint);border-color:#8be7cf30;background:#8be7cf08}
+.pill.online::before{background:var(--mint);box-shadow:0 0 9px #8be7cf55}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-icon{
+  width:47px;height:47px;display:grid;place-items:center;
+  border-radius:16px;background:#8be7cf0c;border:1px solid #8be7cf2e;
+  font-size:27px;flex-shrink:0
+}
+.brand strong{font-size:19px;letter-spacing:1px;display:block}
+.brand small{color:var(--soft);font-size:9px;letter-spacing:2.5px;display:block;margin-top:5px}
+
+/* 登陆 */
+.landing{
+  min-height:100dvh;display:grid;grid-template-columns:1.08fr 1fr;
+  max-width:1560px;margin:auto
+}
+.story{
+  padding:45px 60px;display:flex;flex-direction:column;overflow:hidden;
+  position:relative;border-right:1px solid var(--border);
+  background:
+    radial-gradient(ellipse at 10% 80%,#245f5a46,transparent 62%),
+    radial-gradient(ellipse at 95% 12%,#293a6640,transparent 50%),
+    #111e2e
+}
+.story-main{margin:auto 0;padding:65px 0;position:relative;z-index:1}
+.story h1{
+  font-size:clamp(39px,4.4vw,65px);line-height:1.28;
+  letter-spacing:-2px;margin:25px 0
+}
+.story h1 em{color:var(--mint);font-style:normal}
+.story-main>p{font-size:17px;color:#afc0d1;line-height:2}
+.orbit-card{
+  margin-top:45px;padding:19px 21px;border:1px solid #89bbbc25;
+  border-radius:17px;background:#102b3266;max-width:370px
+}
+.orbit-card .row{justify-content:space-between}
+.orbit-card .route{
+  color:#d6e6ee;font-size:14px;letter-spacing:1px
+}
+.orbit-card .route-line{
+  height:1px;flex:1;margin:0 15px;position:relative;
+  background:linear-gradient(90deg,#8be7cf55,#8be7cf)
+}
+.orbit-card .route-line::after{
+  content:"";position:absolute;right:0;top:-3px;
+  width:7px;height:7px;border-radius:50%;background:var(--mint)
+}
+.orbit-card p{margin:13px 0 0;font-size:11px;color:#8fb2bb}
+.story-footer{
+  display:flex;justify-content:space-between;gap:15px;
+  color:#8da4b8;font-size:11px;letter-spacing:.6px
+}
+.login-side{
+  display:grid;place-items:center;
+  background:radial-gradient(ellipse at 90% 5%,#1e3a4c22,transparent 55%)
+}
+.login-card{width:100%;max-width:430px;padding:46px 30px}
+.mobile-brand{display:none}
+.login-card h2{font-size:29px;letter-spacing:-1px;margin:29px 0 10px}
+.login-card>.muted{font-size:14px}
+.connection-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:10px
+}
+.connection-bar .ghost{padding:6px;font-size:12px}
+.password-box{position:relative}
+.password-box input{padding-right:64px}
+.password-box button{
+  position:absolute;right:7px;top:7px;
+  background:none;color:var(--muted);font-size:12px;padding:10px
+}
+.check{
+  display:flex;align-items:center;gap:9px;color:var(--muted);
+  font-size:13px;margin:18px 0 25px
+}
+.check input{width:16px;height:16px;accent-color:var(--mint);margin:0}
+.login-divider{height:1px;background:var(--border);margin:27px 0 20px}
+.login-footer{display:flex;gap:9px;align-items:flex-start}
+.login-footer span{color:var(--mint);font-size:18px}
+.login-footer p{margin:0}
+.login-actions{display:flex;gap:10px;margin-top:17px}
+.login-actions button{flex:1;font-size:13px;padding:11px}
+.connection-hint{
+  margin-top:16px;padding:13px 15px;background:#233148;
+  border-radius:12px;font-size:12px;line-height:1.8;color:#c2cee0
+}
+
+/* 聊天 */
+.app{
+  height:100dvh;display:grid;grid-template-columns:264px 1fr;
+  max-width:1640px;margin:auto;border-inline:1px solid #ffffff07
+}
+.sidebar{
+  background:#0e1929;border-right:1px solid var(--border);
+  display:flex;flex-direction:column;padding:28px 17px 0;min-height:0
+}
+.sidebar .brand{margin:0 9px 37px}
+.sidebar .brand strong{font-size:18px}
+.section-label{
+  margin:0 12px 12px;color:var(--soft);font-size:11px;
+  letter-spacing:1.6px;display:flex;justify-content:space-between
+}
+.room{
+  display:flex;align-items:center;gap:12px;padding:15px 13px;
+  border:1px solid #8be7cf28;background:#8be7cf09;border-radius:14px
+}
+.room-icon{font-size:27px;color:var(--mint);font-weight:300}
+.room strong{font-size:14px;font-weight:600}
+.room small{display:block;margin-top:7px;color:var(--muted);font-size:11px}
+.members-heading{margin-top:30px}
+.members{flex:1;min-height:0;overflow:auto;scrollbar-width:thin}
+.member{display:flex;align-items:center;gap:10px;padding:10px 12px}
+.avatar{
+  width:37px;height:37px;display:grid;place-items:center;flex-shrink:0;
+  border-radius:12px;color:#a7e9dd;background:#203e49;
+  border:1px solid #86cebf20;font-size:14px;font-weight:600
+}
+.member-name{
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px
+}
+.member-state{margin-left:auto;font-size:10px;color:var(--soft);white-space:nowrap}
+.member.online .member-state{color:var(--mint)}
+.member.offline .avatar{filter:saturate(.3);opacity:.65}
+.sidebar-invite{
+  background:linear-gradient(120deg,#203047,#182b34);
+  border:1px solid #344354;border-radius:13px;padding:15px;margin-top:18px
+}
+.sidebar-invite strong{font-size:13px}
+.sidebar-invite p{font-size:11px;line-height:1.7;color:var(--muted);margin:8px 0 12px}
+.sidebar-invite button{font-size:12px;padding:9px 12px;width:100%}
+.me{
+  display:flex;align-items:center;gap:10px;padding:20px 5px;
+  border-top:1px solid var(--border);margin-top:20px
+}
+.me>div:nth-child(2){min-width:0;flex:1}
+.me strong{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px}
+.me small{display:block;font-size:10px;color:var(--soft);margin-top:5px}
+.conversation{
+  display:flex;flex-direction:column;min-width:0;min-height:0;
+  background:radial-gradient(ellipse at 85% 0%,#1c354b38,transparent 60%)
+}
+.chat-header{
+  display:flex;align-items:center;gap:13px;padding:20px 29px;
+  border-bottom:1px solid var(--border);min-height:88px;flex-shrink:0
+}
+.header-title{flex:1;min-width:0}
+.header-title h1{font-size:19px;margin:0 0 7px;letter-spacing:.3px}
+.header-title p{font-size:11px;color:var(--muted);margin:0}
+.header-mark{
+  width:43px;height:43px;border-radius:14px;background:#8be7cf0b;
+  display:grid;place-items:center;color:var(--mint);font-size:25px
+}
+.mobile-only{display:none}
+.offline-banner{
+  padding:10px 20px;background:#664c2629;border-bottom:1px solid #80643a33;
+  color:var(--amber);font-size:12px;display:flex;justify-content:center;
+  align-items:center;gap:9px;flex-wrap:wrap
+}
+.offline-banner button{background:transparent;color:var(--mint);font-size:12px}
+.messages{
+  flex:1;overflow:auto;overscroll-behavior:contain;padding:22px 30px 15px;
+  scrollbar-width:thin;scrollbar-color:#2c3f55 transparent
+}
+.history-btn{
+  display:block;margin:0 auto 25px;border-radius:30px;
+  background:#18283c;color:var(--muted);font-size:11px;padding:8px 15px
+}
+.empty{
+  min-height:330px;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;text-align:center;padding:35px 10px
+}
+.empty-icon{
+  width:90px;height:90px;border-radius:28px;background:#8be7cf08;
+  border:1px solid #8be7cf1c;display:grid;place-items:center;
+  font-size:45px;margin-bottom:26px;transform:rotate(-6deg)
+}
+.empty h2{font-size:22px;letter-spacing:-.4px}
+.empty p{font-size:13px;line-height:1.9;color:var(--muted)}
+.empty .pill{margin-top:8px;font-size:10px}
+.day{
+  display:flex;align-items:center;gap:15px;color:var(--soft);
+  font-size:10px;margin:26px 0
+}
+.day::before,.day::after{content:"";height:1px;background:var(--border);flex:1}
+.message{display:flex;gap:11px;align-items:flex-start;margin:22px 0}
+.message.mine{flex-direction:row-reverse}
+.message-content{max-width:min(77%,650px);min-width:0}
+.message-meta{display:flex;gap:9px;align-items:center;font-size:11px;margin:0 0 7px}
+.message-meta strong{font-weight:500;color:#b9ccdf}
+.message-meta time{font-size:10px;color:var(--soft)}
+.mine .message-meta{flex-direction:row-reverse}
+.bubble{
+  white-space:pre-wrap;overflow-wrap:anywhere;font-size:15px;line-height:1.75;
+  padding:12px 16px;background:#192b40;border:1px solid #2b4058;
+  border-radius:3px 16px 16px 16px
+}
+.mine .bubble{
+  background:#23534b;border-color:#387a6b;color:#e4fff5;
+  border-radius:16px 3px 16px 16px
+}
+.mine .avatar{background:#23483d;color:#b6f0d4}
+.composer-wrap{padding:12px 28px max(18px,env(safe-area-inset-bottom))}
+.composer{
+  display:flex;align-items:flex-end;gap:10px;background:#132237;
+  border:1px solid #31455e;border-radius:18px;padding:10px;
+  box-shadow:0 8px 30px #0002
+}
+.composer:focus-within{border-color:#629a93}
+.composer textarea{
+  resize:none;max-height:145px;min-height:43px;border:0;background:transparent;
+  box-shadow:none;padding:10px;font-size:16px;line-height:1.5;border-radius:0
+}
+.send{
+  width:43px;height:43px;display:grid;place-items:center;
+  flex-shrink:0;border-radius:13px;background:var(--mint);
+  color:var(--mint-dark);font-size:25px
+}
+.composer-footer{
+  display:flex;justify-content:space-between;padding:11px 3px 0;
+  color:var(--soft);font-size:10px;gap:15px
+}
+.pending-row{
+  display:flex;align-items:center;gap:9px;padding:9px 5px;
+  font-size:12px;color:var(--amber)
+}
+.pending-row span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pending-row button{background:transparent;color:var(--mint);font-size:12px}
+.backdrop{
+  display:none;position:fixed;inset:0;background:#0008;
+  backdrop-filter:blur(3px);z-index:8
+}
+
+/* 弹窗 */
+dialog{
+  width:min(460px,calc(100% - 28px));max-height:90dvh;overflow:auto;
+  border:1px solid #354960;border-radius:23px;background:#122034;
+  color:var(--text);padding:27px;box-shadow:var(--shadow)
+}
+dialog::backdrop{background:#040b16bb;backdrop-filter:blur(7px)}
+.dialog-header{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.dialog-header h2{font-size:21px;letter-spacing:-.5px;margin:0}
+dialog>.muted,dialog form>.muted{font-size:13px;margin:13px 0 0}
+dialog textarea{resize:vertical;min-height:105px;font-size:13px;line-height:1.7}
+.dialog-actions{display:flex;gap:10px;margin-top:20px}
+.dialog-actions button{flex:1;font-size:13px}
+.code-box{
+  border:1px dashed #4d756b;border-radius:14px;background:#0a1b24;
+  padding:16px;font-family:ui-monospace,Consolas,monospace;
+  font-size:12px;line-height:1.8;overflow-wrap:anywhere;color:#b5efdf;
+  max-height:180px;overflow:auto;margin-top:17px;user-select:all
+}
+.share-note{
+  background:#8be7cf08;border:1px solid #8be7cf19;
+  padding:12px 14px;border-radius:12px;margin-top:17px
+}
+.video-box{
+  position:relative;background:#050a12;border-radius:17px;
+  overflow:hidden;aspect-ratio:1;margin-top:18px
+}
+.video-box video{width:100%;height:100%;object-fit:cover}
+.scan-frame{
+  position:absolute;inset:18%;border:2px solid var(--mint);
+  border-radius:17px;box-shadow:0 0 0 80px #0004;pointer-events:none
+}
+.scan-line{
+  position:absolute;left:20%;right:20%;top:22%;height:2px;
+  background:var(--mint);box-shadow:0 0 12px var(--mint);
+  animation:scan 2s ease-in-out infinite alternate
+}
+@keyframes scan{to{top:77%}}
+.danger{color:var(--red)}
+.toast{
+  position:fixed;z-index:100;left:50%;bottom:max(27px,env(safe-area-inset-bottom));
+  transform:translateX(-50%);max-width:calc(100% - 30px);
+  padding:13px 20px;border:1px solid #598c7e;background:#244539;
+  color:#e3fff2;border-radius:13px;box-shadow:0 8px 35px #0006;
+  font-size:13px;text-align:center
+}
+@media(min-width:1550px){
+  .landing{padding:35px 0}
+  .story{border:1px solid var(--border);border-radius:25px}
+}
+@media(max-width:800px){
+  .landing{display:block}
+  .story{display:none}
+  .login-side{
+    min-height:100dvh;
+    background:radial-gradient(ellipse at 90% 0%,#285a4f40,transparent 58%)
+  }
+  .login-card{padding:30px 26px 40px;max-width:440px}
+  .mobile-brand{display:flex;margin-bottom:36px}
+  .login-card h2{font-size:27px;line-height:1.4;margin-top:27px}
+  .app{display:block;border:0}
+  .conversation{height:100dvh}
+  .sidebar{
+    position:fixed;z-index:9;left:0;top:0;bottom:0;width:280px;
+    transform:translateX(-110%);transition:transform .22s ease
+  }
+  .sidebar.open{transform:translateX(0)}
+  .backdrop.open{display:block}
+  .mobile-only{display:inline-grid}
+  .chat-header{padding:15px 12px;min-height:77px;gap:6px}
+  .header-mark{display:none}
+  .header-title h1{font-size:16px;letter-spacing:0}
+  .header-title p{font-size:10px}
+  .chat-header .pill{font-size:10px;padding:6px 8px}
+  .chat-header>.icon-btn{width:32px;font-size:18px}
+  .messages{padding:15px 14px 10px}
+  .message{gap:8px;margin:20px 0}
+  .message>.avatar{width:31px;height:31px;border-radius:10px;font-size:12px}
+  .message-content{max-width:calc(100% - 49px)}
+  .bubble{padding:11px 13px;font-size:15px}
+  .composer-wrap{padding:8px 11px max(12px,env(safe-area-inset-bottom))}
+  .composer{gap:3px;padding:7px;border-radius:16px}
+  .composer textarea{padding:9px;min-height:40px}
+  .send{width:40px;height:40px}
+  .composer-footer{justify-content:center;font-size:9px;padding-top:9px}
+  .keyboard-hint{display:none}
+  .empty{min-height:280px}
+  .empty h2{font-size:20px}
+  .empty-icon{width:75px;height:75px;font-size:37px;margin-bottom:22px}
+  dialog{padding:23px}
+}
+@media(max-width:360px){
+  .header-title h1{font-size:14px}
+  .chat-header .pill{padding:5px 6px}
+  .login-card{padding-inline:20px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+
+<body>
+
+<!-- 登录 -->
+<main id="loginView" class="landing">
+  <section class="story">
+    <div class="brand">
+      <span class="brand-icon">🚀</span>
+      <div><strong>火星联络站</strong><small>MARS CHAT · EARTH BRANCH</small></div>
+    </div>
+
+    <div class="story-main">
+      <span class="eyebrow">LONG DISTANCE, SAME NONSENSE</span>
+      <h1>去火星了，<br><em>也能聊。</em></h1>
+      <p>信号跨越半个地球，<br>废话一句也不能少。</p>
+
+      <div class="orbit-card">
+        <div class="row route">
+          <span>你这边</span><span class="route-line"></span><span>朋友那边</span>
+        </div>
+        <p>距离不是问题，电脑忘开才是。</p>
+      </div>
+    </div>
+
+    <footer class="story-footer">
+      <span>一个属于朋友们的小小空间</span>
+      <span>EARTH ↔ MARS</span>
+    </footer>
+  </section>
+
+  <section class="login-side">
+    <div class="login-card">
+      <div class="brand mobile-brand">
+        <span class="brand-icon">🚀</span>
+        <div><strong>火星联络站</strong><small>去火星了也能聊</small></div>
+      </div>
+
+      <div class="connection-bar">
+        <span class="pill" id="loginStatus">等待接入联络站</span>
+        <button class="ghost" id="retryHealth" type="button">重新检测</button>
+      </div>
+
+      <h2>地球呼叫，收到请登录。</h2>
+      <p class="muted">账号就位，准备接收朋友的碎碎念。</p>
+
+      <form id="loginForm">
+        <label for="username">聊天账号</label>
+        <input id="username" autocomplete="username"
+          placeholder="电脑端为你创建的账号" maxlength="32" required>
+
+        <label for="password">密码</label>
+        <div class="password-box">
+          <input id="password" type="password" autocomplete="current-password"
+            placeholder="输入你的密码" maxlength="128" required>
+          <button id="showPassword" type="button" aria-label="显示密码">显示</button>
+        </div>
+
+        <label class="check">
+          <input id="remember" type="checkbox" checked>
+          在这台设备上保持登录
+        </label>
+
+        <button class="primary wide" id="loginButton" type="submit">进入聊天　↗</button>
+        <p class="error" id="loginError" role="alert"></p>
+      </form>
+
+      <div class="login-actions">
+        <button class="secondary" id="openConnect" type="button">⌘　输入连接码</button>
+        <button class="secondary" id="scanLogin" type="button">▣　扫码连接</button>
+      </div>
+
+      <div class="connection-hint" id="connectionHint">
+        第一次来？打开朋友发来的邀请链接，或粘贴连接码。
+      </div>
+
+      <div class="login-divider"></div>
+      <div class="login-footer">
+        <span>✦</span>
+        <p class="note">账号由电脑端创建。<br>没有账号？找负责开机的那位地球人。</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- 聊天 -->
+<div id="sidebarBackdrop" class="backdrop"></div>
+
+<main id="chatView" class="app" hidden>
+  <aside id="sidebar" class="sidebar">
+    <div class="brand">
+      <span class="brand-icon">🚀</span>
+      <div><strong>火星联络站</strong><small>MARS CHAT</small></div>
+    </div>
+
+    <div class="section-label">我们的空间</div>
+    <div class="room">
+      <span class="room-icon">#</span>
+      <div>
+        <strong>去火星了也能聊</strong>
+        <small>不管在哪，唠就完了。</small>
+      </div>
+    </div>
+
+    <div class="section-label members-heading">
+      <span>地球居民</span><span id="memberCount">0</span>
+    </div>
+    <div id="members" class="members"></div>
+
+    <div class="sidebar-invite">
+      <strong>给朋友留个登船口</strong>
+      <p>分享邀请链接或连接码。<br>聊天仍然需要自己的账号。</p>
+      <button class="secondary" id="shareSidebar" type="button">分享连接方式</button>
+    </div>
+
+    <div class="me">
+      <div class="avatar" id="myAvatar">我</div>
+      <div><strong id="myName">地球居民</strong><small>今天也有话想说</small></div>
+      <button class="icon-btn" id="profileButton" type="button" aria-label="个人设置">⚙</button>
+    </div>
+  </aside>
+
+  <section class="conversation">
+    <header class="chat-header">
+      <button class="icon-btn mobile-only" id="menuButton" type="button" aria-label="成员列表">☰</button>
+      <div class="header-mark">#</div>
+      <div class="header-title">
+        <h1>去火星了也能聊</h1>
+        <p id="onlineCount">正在寻找地球信号…</p>
+      </div>
+      <span class="pill" id="chatStatus">连接中</span>
+      <button class="icon-btn" id="shareHeader" type="button" aria-label="分享连接方式">↗</button>
+    </header>
+
+    <div id="offlineBanner" class="offline-banner" hidden>
+      <span id="offlineText">信号暂时失联，正在重新连接。</span>
+      <button id="reconnectButton" type="button">立即重试</button>
+      <button id="changeConnection" type="button">更换连接码</button>
+    </div>
+
+    <div id="messages" class="messages">
+      <button class="history-btn" id="loadOlder" type="button" hidden>查看更早的消息</button>
+
+      <div class="empty" id="emptyChat">
+        <div class="empty-icon">🪐</div>
+        <h2>第一句星际废话，等你发射。</h2>
+        <p>今天吃了什么、遇见了谁，<br>或者只是想说一句「在吗」。</p>
+        <span class="pill">这里没有已读压力，只有朋友。</span>
+      </div>
+
+      <div id="messageList" role="log" aria-live="polite" aria-label="聊天消息"></div>
+    </div>
+
+    <div class="composer-wrap">
+      <div id="pendingList"></div>
+      <form id="messageForm" class="composer">
+        <textarea id="messageInput" rows="1" maxlength="4000"
+          aria-label="聊天消息" placeholder="向宇宙发射一句碎碎念…"></textarea>
+        <button class="send" id="sendButton" type="submit" aria-label="发送消息" disabled>↑</button>
+      </form>
+      <div class="composer-footer">
+        <span>本次通话，暂不收取星际漫游费。</span>
+        <span class="keyboard-hint">Enter 发送 · Shift + Enter 换行</span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- 连接码 -->
+<dialog id="connectDialog">
+  <form id="connectForm">
+    <div class="dialog-header">
+      <h2>接入联络站</h2>
+      <button class="icon-btn" type="button" data-close="connectDialog" aria-label="关闭">×</button>
+    </div>
+    <p class="muted">粘贴朋友发来的连接码或邀请链接。电脑端复制的服务器链接也可以。</p>
+
+    <label for="connectionInput">连接码 / 邀请链接</label>
+    <textarea id="connectionInput"
+      placeholder="火星连接码：MARS1.…&#10;或 https://…"
+      spellcheck="false" autocomplete="off" required></textarea>
+
+    <p class="error" id="connectError" role="alert"></p>
+    <div class="dialog-actions">
+      <button class="secondary" id="scanFromConnect" type="button">扫码识别</button>
+      <button class="primary" id="connectButton" type="submit">连接这里</button>
+    </div>
+    <p class="note">连接码只告诉网页去哪里连接，不包含密码，也不会绕过账号登录。</p>
+  </form>
+</dialog>
+
+<!-- 扫码 -->
+<dialog id="scanDialog">
+  <div class="dialog-header">
+    <h2>扫描联络站二维码</h2>
+    <button class="icon-btn" type="button" data-close="scanDialog" aria-label="关闭">×</button>
+  </div>
+  <p class="muted">对准电脑端或朋友展示的邀请二维码。</p>
+  <div class="video-box" id="videoBox">
+    <video id="scanVideo" muted playsinline autoplay></video>
+    <div class="scan-frame"></div><div class="scan-line"></div>
+  </div>
+  <p class="note" id="scanStatus">正在请求相机权限…</p>
+  <p class="error" id="scanError" role="alert"></p>
+  <div class="dialog-actions">
+    <button class="secondary" id="scanImageButton" type="button">识别图片</button>
+    <button class="primary" id="scanFallback" type="button">改用连接码</button>
+  </div>
+  <input id="scanImageInput" type="file" accept="image/*" hidden>
+</dialog>
+
+<!-- 分享 -->
+<dialog id="shareDialog">
+  <div class="dialog-header">
+    <h2>把登船口发给朋友</h2>
+    <button class="icon-btn" type="button" data-close="shareDialog" aria-label="关闭">×</button>
+  </div>
+  <p class="muted">朋友打开邀请链接即可接入；也可以把下面的连接码粘贴到登录页。</p>
+
+  <div class="code-box" id="shareCode"></div>
+
+  <div class="dialog-actions">
+    <button class="secondary" id="copyCode" type="button">复制连接码</button>
+    <button class="primary" id="copyInvite" type="button">复制邀请链接</button>
+  </div>
+  <button class="ghost wide" id="nativeShare" type="button">通过手机分享…</button>
+
+  <p class="note share-note">
+    连接码不是账号。朋友仍需电脑端创建的账号和密码。<br>
+    如果使用临时服务器入口，入口变化后需要重新分享。
+  </p>
+</dialog>
+
+<!-- 设置 -->
+<dialog id="profileDialog">
+  <form id="profileForm">
+    <div class="dialog-header">
+      <h2 id="profileTitle">我的地球身份</h2>
+      <button class="icon-btn" id="closeProfile" type="button" aria-label="关闭">×</button>
+    </div>
+    <p class="muted" id="profileHint">换个昵称，或者更新密码。</p>
+
+    <div id="nicknameField">
+      <label for="nicknameInput">昵称</label>
+      <input id="nicknameInput" maxlength="32" autocomplete="nickname">
+    </div>
+
+    <label for="currentPassword">当前密码</label>
+    <input id="currentPassword" type="password" maxlength="128" autocomplete="current-password">
+
+    <label for="newPassword">新密码</label>
+    <input id="newPassword" type="password" minlength="8" maxlength="128"
+      autocomplete="new-password" placeholder="不改密码则留空">
+
+    <label for="confirmPassword">确认新密码</label>
+    <input id="confirmPassword" type="password" minlength="8" maxlength="128"
+      autocomplete="new-password">
+
+    <p class="error" id="profileError" role="alert"></p>
+    <button class="primary wide" id="saveProfile" type="submit">保存</button>
+    <button class="ghost wide danger" id="logoutButton" type="button">退出登录</button>
+  </form>
+</dialog>
+
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+"use strict";
+
+/*
+  可选：如果以后有固定服务器地址，可以填在这里。
+  留空也能通过邀请链接、连接码或扫码连接。
+  手机用户不需要编辑代码。
+
+  例：
+  const DEFAULT_SERVER = "https://chat.example.com";
+*/
+const DEFAULT_SERVER = "";
+
+const $ = id => document.getElementById(id);
+
+const state = {
+  endpoint: "",
+  token: "",
+  user: null,
+  ws: null,
+  ready: false,
+  stopped: true,
+  retries: 0,
+  reconnectTimer: null,
+  authTimer: null,
+  generation: 0,
+  messages: new Map(),
+  pending: new Map(),
+  hasOlder: false,
+  syncing: false,
+  scanStream: null,
+  scanDetector: null,
+  scanTimer: null,
+  scanGeneration: 0
+};
+
+const storage = {
+  get(key) {
+    try { return localStorage.getItem(key) || sessionStorage.getItem(key) || ""; }
+    catch { return ""; }
+  },
+  set(key, value, persistent = true) {
+    try {
+      localStorage.removeItem(key);
+      sessionStorage.removeItem(key);
+      (persistent ? localStorage : sessionStorage).setItem(key, value);
+    } catch {}
+  },
+  remove(key) {
+    try {
+      localStorage.removeItem(key);
+      sessionStorage.removeItem(key);
+    } catch {}
+  }
+};
+
+function tokenKey() {
+  return "mars-token:" + state.endpoint;
+}
+
+function toast(message) {
+  $("toast").textContent = message;
+  $("toast").hidden = false;
+  clearTimeout(toast.timer);
+  toast.timer = setTimeout(() => $("toast").hidden = true, 3300);
+}
+
+function makeElement(tag, className, text) {
+  const el = document.createElement(tag);
+  if (className) el.className = className;
+  if (text !== undefined) el.textContent = text;
+  return el;
+}
+
+function firstLetter(value) {
+  return Array.from(value || "星")[0];
+}
+
+function randomId() {
+  if (crypto.randomUUID) return crypto.randomUUID();
+  return Array.from(crypto.getRandomValues(new Uint8Array(16)),
+    b => b.toString(16).padStart(2, "0")).join("");
+}
+
+function normalizeEndpoint(value) {
+  const url = new URL(value);
+  const local = ["localhost", "127.0.0.1", "[::1]"].includes(url.hostname);
+
+  if (url.protocol !== "https:" && !(url.protocol === "http:" && local)) {
+    throw Error("外网地址需要以 https:// 开头。");
+  }
+  if (url.username || url.password) throw Error("链接格式不正确。");
+  if (url.pathname !== "/" && url.pathname !== "") {
+    throw Error("请使用电脑端生成的邀请链接，或服务器入口地址。");
+  }
+  if (url.hostname.endsWith(".github.io")) {
+    throw Error("这是网页地址。请使用带服务器信息的邀请链接或连接码。");
+  }
+  return url.origin;
+}
+
+function decodeCode(code) {
+  let text = code.slice(6).replace(/-/g, "+").replace(/_/g, "/");
+  text += "=".repeat((4 - text.length % 4) % 4);
+  const bytes = Uint8Array.from(atob(text), c => c.charCodeAt(0));
+  return new TextDecoder().decode(bytes);
+}
+
+function parseConnection(input) {
+  let text = String(input || "").trim();
+  if (!text || text.length > 5000) throw Error("请粘贴有效的连接码或邀请链接。");
+
+  const code = text.match(/MARS1\.[A-Za-z0-9_-]+/);
+  if (code) {
+    try { return normalizeEndpoint(decodeCode(code[0])); }
+    catch { throw Error("连接码无效或不完整，请重新复制。"); }
+  }
+
+  const link = text.match(/https?:\/\/[^\s<>"“”]+/i);
+  if (link) text = link[0];
+
+  let url;
+  try { url = new URL(text); }
+  catch { throw Error("没有识别到连接码或完整链接。"); }
+
+  const parameters = new URLSearchParams(url.hash.slice(1));
+  if (parameters.has("server")) {
+    return normalizeEndpoint(parameters.get("server"));
+  }
+  if (parameters.has("code")) {
+    return parseConnection(parameters.get("code"));
+  }
+  return normalizeEndpoint(url.href);
+}
+
+function connectionCode() {
+  const bytes = new TextEncoder().encode(state.endpoint);
+  let binary = "";
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  return "MARS1." + btoa(binary)
+    .replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+function inviteLink() {
+  if (!/^https?:$/.test(location.protocol)) return state.endpoint;
+  const url = new URL(location.href);
+  url.hash = "server=" + encodeURIComponent(state.endpoint);
+  return url.href;
+}
+
+async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch {
+    const area = document.createElement("textarea");
+    area.value = text;
+    area.style.position = "fixed";
+    area.style.opacity = "0";
+    const host = document.querySelector("dialog[open]") || document.body;
+    host.append(area);
+    area.select();
+    const copied = document.execCommand("copy");
+    area.remove();
+    if (!copied) throw Error("无法自动复制，请长按连接码手动复制。");
+  }
+}
+
+async function api(route, options = {}) {
+  if (!state.endpoint) throw Error("请先输入连接码或打开邀请链接。");
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 12000);
+  let response;
+
+  try {
+    response = await fetch(state.endpoint + "/api/" + route, {
+      ...options,
+      headers: {
+        ...(options.body ? { "Content-Type": "application/json" } : {}),
+        ...(state.token ? { Authorization: "Bearer " + state.token } : {}),
+        ...(options.headers || {})
+      },
+      signal: controller.signal,
+      cache: "no-store",
+      credentials: "omit",
+      referrerPolicy: "no-referrer"
+    });
+  } catch {
+    throw Error("暂时连不上服务器。请确认电脑软件已开启，或更新连接码。");
+  } finally {
+    clearTimeout(timer);
+  }
+
+  let data;
+  try { data = await response.json(); }
+  catch { throw Error("这个入口暂时无法提供聊天服务。"); }
+
+  if (!response.ok) {
+    const error = Error(data.error || "操作失败，请稍后再试。");
+    error.status = response.status;
+    throw error;
+  }
+
+  return data;
+}
+
+function setLoginStatus(text, online = false) {
+  $("loginStatus").textContent = text;
+  $("loginStatus").classList.toggle("online", online);
+}
+
+function updateConnectionHint() {
+  $("connectionHint").textContent = state.endpoint
+    ? "已记住这个联络站。下次打开可直接登录；入口变化时更新连接码即可。"
+    : "第一次来？打开朋友发来的邀请链接，或粘贴连接码。";
+}
+
+let healthSequence = 0;
+
+async function checkHealth(restore = false) {
+  const sequence = ++healthSequence;
+  updateConnectionHint();
+
+  if (!state.endpoint) {
+    setLoginStatus("等待接入联络站");
+    return;
+  }
+
+  setLoginStatus("正在寻找地球信号…");
+
+  try {
+    await api("health");
+    if (sequence !== healthSequence) return;
+    setLoginStatus("联络站在线", true);
+    if (restore && state.token && !state.user) await restoreLogin();
+  } catch (error) {
+    if (sequence !== healthSequence) return;
+    setLoginStatus("暂时无法连接");
+    $("connectionHint").textContent =
+      "可能是电脑未开、网络暂时不通，或临时入口已变化。可以重试或更新连接码。";
+  }
+}
+
+function disconnectSocket() {
+  clearTimeout(state.reconnectTimer);
+  clearTimeout(state.authTimer);
+  state.ready = false;
+
+  if (state.ws) {
+    const ws = state.ws;
+    state.ws = null;
+    ws.onclose = null;
+    ws.onmessage = null;
+    ws.onopen = null;
+    ws.close();
+  }
+}
+
+function showConnectionDialog(value = "") {
+  $("connectionInput").value = value;
+  $("connectError").textContent = "";
+  $("connectDialog").showModal();
+}
+
+async function applyConnection(text) {
+  const next = parseConnection(text);
+
+  if (state.user) {
+    const question = state.pending.size
+      ? "切换连接会退出当前聊天，并清除本页未确认的消息。继续吗？"
+      : "切换连接会退出当前聊天，继续吗？";
+    if (!confirm(question)) return false;
+    await logout(false);
+  }
+
+  disconnectSocket();
+  state.endpoint = next;
+  state.generation++;
+  storage.set("mars-endpoint", next);
+  state.token = storage.get(tokenKey());
+  $("loginError").textContent = "";
+  updateConnectionHint();
+  await checkHealth(true);
+  return true;
+}
+
+async function restoreLogin() {
+  try {
+    const result = await api("me");
+    state.user = result.user;
+    enterChat();
+  } catch (error) {
+    if (error.status === 401) {
+      storage.remove(tokenKey());
+      state.token = "";
+    } else {
+      $("loginError").textContent = error.message;
+    }
+  }
+}
+
+function updateMyProfile() {
+  $("myName").textContent = state.user.nickname;
+  $("myAvatar").textContent = firstLetter(state.user.nickname);
+}
+
+function enterChat() {
+  state.stopped = false;
+  state.generation++;
+  $("loginView").hidden = true;
+  $("chatView").hidden = false;
+  updateMyProfile();
+
+  if (state.user.must_change) {
+    openProfile(true);
+  } else {
+    connectSocket();
+  }
+}
+
+function updateReady(ready, message) {
+  state.ready = ready;
+  $("chatStatus").textContent = ready ? "已连接" : "连接中断";
+  $("chatStatus").classList.toggle("online", ready);
+  $("offlineBanner").hidden = ready;
+  $("sendButton").disabled = !ready || !$("messageInput").value.trim();
+  if (!ready) $("onlineCount").textContent = "等待信号恢复";
+  if (message) $("offlineText").textContent = message;
+}
+
+function scheduleReconnect() {
+  if (state.stopped || !state.user) return;
+  const delay = Math.min(15000, 1000 * 2 ** state.retries++) + Math.random() * 500;
+  clearTimeout(state.reconnectTimer);
+  state.reconnectTimer = setTimeout(connectSocket, delay);
+}
+
+function connectSocket() {
+  disconnectSocket();
+  if (state.stopped || !state.user || state.user.must_change) return;
+
+  updateReady(false, "信号暂时失联，正在重新连接。");
+
+  let ws;
+  try {
+    ws = new WebSocket(state.endpoint.replace(/^http/, "ws") + "/socket");
+  } catch {
+    scheduleReconnect();
+    return;
+  }
+
+  state.ws = ws;
+  state.authTimer = setTimeout(() => {
+    if (state.ws === ws && !state.ready) ws.close();
+  }, 12000);
+
+  ws.onopen = () => {
+    if (state.ws === ws) {
+      ws.send(JSON.stringify({ type: "auth", token: state.token }));
+    }
+  };
+
+  ws.onmessage = async event => {
+    if (state.ws !== ws) return;
+    let data;
+    try { data = JSON.parse(event.data); }
+    catch { return; }
+
+    if (data.type === "ready") {
+      clearTimeout(state.authTimer);
+      state.retries = 0;
+      updateReady(true);
+      await syncHistory();
+    }
+
+    if (data.type === "presence") renderMembers(data.users || []);
+
+    if (data.type === "message" && data.message) {
+      const message = data.message;
+      state.messages.set(message.id, message);
+      if (message.user_id === state.user.id) {
+        state.pending.delete(message.client_id);
+      }
+      renderMessages();
+      renderPending();
+    }
+
+    if (data.type === "error") {
+      toast(data.error || "消息未能发送。");
+      for (const item of state.pending.values()) item.failed = true;
+      renderPending();
+    }
+  };
+
+  ws.onerror = () => {};
+
+  ws.onclose = event => {
+    if (state.ws !== ws || state.stopped) return;
+    clearTimeout(state.authTimer);
+    state.ws = null;
+    updateReady(false);
+
+    for (const item of state.pending.values()) item.failed = true;
+    renderPending();
+
+    if (event.code === 4001) {
+      logout(false);
+      $("loginError").textContent = "登录已失效，或账号状态发生变化，请重新登录。";
+      return;
+    }
+    scheduleReconnect();
+  };
+}
+
+function highestMessageId() {
+  let id = 0;
+  for (const key of state.messages.keys()) if (key > id) id = key;
+  return id;
+}
+
+function lowestMessageId() {
+  let id = Infinity;
+  for (const key of state.messages.keys()) if (key < id) id = key;
+  return id;
+}
+
+async function syncHistory() {
+  if (state.syncing || !state.user) return;
+  state.syncing = true;
+  const generation = state.generation;
+
+  try {
+    let after = highestMessageId();
+
+    for (;;) {
+      const data = await api(after ? "history?after=" + after : "history");
+      if (generation !== state.generation || !state.user) return;
+
+      const messages = data.messages || [];
+      for (const message of messages) {
+        state.messages.set(message.id, message);
+        if (message.user_id === state.user.id) {
+          state.pending.delete(message.client_id);
+        }
+      }
+
+      if (!after) {
+        state.hasOlder = messages.length >= 100;
+        break;
+      }
+
+      if (messages.length < 200) break;
+      after = messages[messages.length - 1].id;
+    }
+
+    renderMessages();
+    renderPending();
+  } catch (error) {
+    toast(error.message);
+  } finally {
+    state.syncing = false;
+  }
+}
+
+function renderMembers(users) {
+  $("memberCount").textContent = users.length;
+  $("onlineCount").textContent =
+    users.filter(user => user.online).length + " 人在线 · " + users.length + " 位朋友";
+
+  const fragment = document.createDocumentFragment();
+  for (const user of users) {
+    const row = makeElement("div", "member " + (user.online ? "online" : "offline"));
+    row.append(
+      makeElement("span", "avatar", firstLetter(user.nickname)),
+      makeElement("span", "member-name", user.nickname),
+      makeElement("span", "member-state", user.online ? "在线" : "离线")
+    );
+    fragment.append(row);
+  }
+  $("members").replaceChildren(fragment);
+}
+
+function renderMessages(preservePosition = false) {
+  if (!state.user) return;
+
+  const box = $("messages");
+  const oldHeight = box.scrollHeight;
+  const oldTop = box.scrollTop;
+  const nearBottom = oldHeight - oldTop - box.clientHeight < 150;
+  const initiallyEmpty = !$("messageList").children.length;
+  const messages = [...state.messages.values()].sort((a, b) => a.id - b.id);
+  const fragment = document.createDocumentFragment();
+  let lastDay = "";
+
+  $("emptyChat").hidden = messages.length > 0;
+  $("loadOlder").hidden = !state.hasOlder || !messages.length;
+
+  for (const message of messages) {
+    const date = new Date(message.created);
+    const day = date.toLocaleDateString("zh-CN", {
+      year: "numeric", month: "long", day: "numeric"
+    });
+
+    if (day !== lastDay) {
+      fragment.append(makeElement("div", "day", day));
+      lastDay = day;
+    }
+
+    const mine = message.user_id === state.user.id;
+    const row = makeElement("article", "message" + (mine ? " mine" : ""));
+    const avatar = makeElement("div", "avatar", firstLetter(message.nickname));
+    const content = makeElement("div", "message-content");
+    const meta = makeElement("div", "message-meta");
+    const name = makeElement("strong", "", message.nickname);
+    const time = makeElement("time", "", date.toLocaleTimeString("zh-CN", {
+      hour: "2-digit", minute: "2-digit"
+    }));
+
+    time.dateTime = message.created;
+    meta.append(name, time);
+
+    // 不把聊天内容当 HTML 执行。
+    const bubble = makeElement("div", "bubble", message.body);
+    content.append(meta, bubble);
+    row.append(avatar, content);
+    fragment.append(row);
+  }
+
+  $("messageList").replaceChildren(fragment);
+
+  if (preservePosition) {
+    box.scrollTop = oldTop + box.scrollHeight - oldHeight;
+  } else if (nearBottom || initiallyEmpty) {
+    box.scrollTop = box.scrollHeight;
+  }
+}
+
+function renderPending() {
+  const fragment = document.createDocumentFragment();
+
+  for (const [id, item] of state.pending) {
+    const row = makeElement("div", "pending-row");
+    row.append(makeElement("span", "",
+      (item.failed ? "未确认 · " : "发送中 · ") + item.body));
+
+    if (item.failed) {
+      const retry = makeElement("button", "", "重试");
+      retry.type = "button";
+      retry.onclick = () => transmit(id, item);
+
+      const remove = makeElement("button", "", "移除");
+      remove.type = "button";
+      remove.onclick = () => {
+        state.pending.delete(id);
+        renderPending();
+      };
+      row.append(retry, remove);
+    }
+
+    fragment.append(row);
+  }
+
+  $("pendingList").replaceChildren(fragment);
+}
+
+function transmit(id, item) {
+  if (!state.ready || state.ws?.readyState !== WebSocket.OPEN) {
+    item.failed = true;
+    renderPending();
+    toast("连接恢复后再试，消息还留在这里。");
+    return;
+  }
+
+  item.failed = false;
+
+  try {
+    state.ws.send(JSON.stringify({
+      type: "message",
+      body: item.body,
+      clientId: id
+    }));
+  } catch {
+    item.failed = true;
+  }
+
+  renderPending();
+
+  setTimeout(() => {
+    if (state.pending.get(id) === item) {
+      item.failed = true;
+      renderPending();
+    }
+  }, 10000);
+}
+
+function sendMessage(event) {
+  event?.preventDefault();
+  const body = $("messageInput").value.trim();
+  if (!body || !state.ready) return;
+
+  const id = randomId();
+  const item = { body, failed: false };
+
+  state.pending.set(id, item);
+  $("messageInput").value = "";
+  $("messageInput").style.height = "auto";
+  $("sendButton").disabled = true;
+  transmit(id, item);
+  $("messages").scrollTop = $("messages").scrollHeight;
+}
+
+function closeSidebar() {
+  $("sidebar").classList.remove("open");
+  $("sidebarBackdrop").classList.remove("open");
+}
+
+function openProfile(force = false) {
+  closeSidebar();
+  $("profileTitle").textContent = force ? "先换上自己的密码" : "我的地球身份";
+  $("profileHint").textContent = force
+    ? "这是第一次登录，请把临时密码改成自己的密码。"
+    : "换个昵称，或者更新密码。只改昵称时密码留空。";
+
+  $("nicknameField").hidden = force;
+  $("nicknameInput").value = state.user.nickname;
+  $("currentPassword").value = "";
+  $("newPassword").value = "";
+  $("confirmPassword").value = "";
+  $("currentPassword").required = force;
+  $("newPassword").required = force;
+  $("confirmPassword").required = force;
+  $("closeProfile").hidden = force;
+  $("profileError").textContent = "";
+  $("profileDialog").showModal();
+}
+
+async function logout(revoke = true) {
+  state.stopped = true;
+  state.generation++;
+  disconnectSocket();
+
+  const oldToken = state.token;
+  const oldEndpoint = state.endpoint;
+
+  if (revoke && oldToken) {
+    // 本地立即退出；服务器撤销在后台完成。
+    fetch(oldEndpoint + "/api/logout", {
+      method: "POST",
+      headers: { Authorization: "Bearer " + oldToken },
+      credentials: "omit",
+      referrerPolicy: "no-referrer"
+    }).catch(() => {});
+  }
+
+  storage.remove(tokenKey());
+  state.token = "";
+  state.user = null;
+  state.messages.clear();
+  state.pending.clear();
+  state.hasOlder = false;
+  state.retries = 0;
+
+  $("messageList").replaceChildren();
+  $("pendingList").replaceChildren();
+  $("members").replaceChildren();
+  $("messageInput").value = "";
+  $("password").value = "";
+  $("profileDialog").close();
+  closeSidebar();
+
+  $("chatView").hidden = true;
+  $("loginView").hidden = false;
+  checkHealth();
+}
+
+function openShare() {
+  if (!state.endpoint) {
+    showConnectionDialog();
+    return;
+  }
+
+  closeSidebar();
+  $("shareCode").textContent = "火星连接码：" + connectionCode();
+  $("nativeShare").hidden = !navigator.share;
+  $("shareDialog").showModal();
+}
+
+/* 二维码扫描：使用浏览器原生识别，不引入外部脚本。 */
+async function prepareDetector() {
+  if (!("BarcodeDetector" in window)) {
+    throw Error("这个浏览器不支持网页扫码。请用手机相机扫描邀请二维码，或粘贴连接码。");
+  }
+
+  const formats = await BarcodeDetector.getSupportedFormats();
+  if (!formats.includes("qr_code")) {
+    throw Error("这个浏览器不能识别二维码，请改用连接码。");
+  }
+
+  state.scanDetector = new BarcodeDetector({ formats: ["qr_code"] });
+}
+
+function stopScanner() {
+  state.scanGeneration++;
+  clearTimeout(state.scanTimer);
+  if (state.scanStream) {
+    state.scanStream.getTracks().forEach(track => track.stop());
+    state.scanStream = null;
+  }
+  $("scanVideo").srcObject = null;
+}
+
+async function acceptScan(value) {
+  let endpoint;
+  try { endpoint = parseConnection(value); }
+  catch {
+    $("scanStatus").textContent = "这不是有效的聊天邀请二维码，请换一个。";
+    return false;
+  }
+
+  $("scanDialog").close();
+  stopScanner();
+  showConnectionDialog(endpoint);
+  $("connectError").textContent = "";
+  toast("已识别，点击“连接这里”即可。");
+  return true;
+}
+
+async function scanFrame(generation) {
+  if (generation !== state.scanGeneration || !$("scanDialog").open) return;
+
+  try {
+    const video = $("scanVideo");
+    if (video.readyState >= 2) {
+      const codes = await state.scanDetector.detect(video);
+      if (generation !== state.scanGeneration) return;
+      for (const code of codes) {
+        if (await acceptScan(code.rawValue)) return;
+      }
+    }
+  } catch {}
+
+  state.scanTimer = setTimeout(() => scanFrame(generation), 300);
+}
+
+async function openScanner() {
+  $("connectDialog").close();
+  stopScanner();
+
+  $("scanError").textContent = "";
+  $("scanStatus").textContent = "正在请求相机权限…";
+  $("videoBox").hidden = false;
+  $("scanImageButton").disabled = true;
+  $("scanDialog").showModal();
+
+  const generation = state.scanGeneration;
+
+  try {
+    await prepareDetector();
+    if (generation !== state.scanGeneration || !$("scanDialog").open) return;
+
+    $("scanImageButton").disabled = false;
+
+    if (!window.isSecureContext || !navigator.mediaDevices?.getUserMedia) {
+      throw Error("相机需要 HTTPS 网页。请使用图片识别或粘贴连接码。");
+    }
+
+    const stream = await navigator.mediaDevices.getUserMedia({
+      audio: false,
+      video: {
+        facingMode: { ideal: "environment" },
+        width: { ideal: 1280 },
+        height: { ideal: 720 }
+      }
+    });
+
+    if (generation !== state.scanGeneration || !$("scanDialog").open) {
+      stream.getTracks().forEach(track => track.stop());
+      return;
+    }
+
+    state.scanStream = stream;
+    $("scanVideo").srcObject = stream;
+    await $("scanVideo").play();
+    $("scanStatus").textContent = "把二维码放进框内，识别成功后会自动提示。";
+    scanFrame(generation);
+  } catch (error) {
+    $("videoBox").hidden = true;
+    $("scanStatus").textContent = "也可以直接使用连接码。";
+    $("scanError").textContent =
+      error.name === "NotAllowedError"
+        ? "相机权限未开启。你可以识别二维码图片，或者粘贴连接码。"
+        : error.message;
+  }
+}
+
+/* 事件 */
+$("loginForm").onsubmit = async event => {
+  event.preventDefault();
+  $("loginError").textContent = "";
+
+  if (!state.endpoint) {
+    showConnectionDialog();
+    return;
+  }
+
+  $("loginButton").disabled = true;
+
+  try {
+    const result = await api("login", {
+      method: "POST",
+      body: JSON.stringify({
+        username: $("username").value.trim(),
+        password: $("password").value
+      })
+    });
+
+    state.token = result.token;
+    state.user = result.user;
+    storage.set(tokenKey(), state.token, $("remember").checked);
+    $("password").value = "";
+    enterChat();
+  } catch (error) {
+    $("loginError").textContent = error.message;
+  } finally {
+    $("loginButton").disabled = false;
+  }
+};
+
+$("showPassword").onclick = () => {
+  const show = $("password").type === "password";
+  $("password").type = show ? "text" : "password";
+  $("showPassword").textContent = show ? "隐藏" : "显示";
+};
+
+$("retryHealth").onclick = () => checkHealth(true);
+$("openConnect").onclick = () => showConnectionDialog();
+$("changeConnection").onclick = () => showConnectionDialog();
+$("scanLogin").onclick = openScanner;
+$("scanFromConnect").onclick = openScanner;
+
+$("connectForm").onsubmit = async event => {
+  event.preventDefault();
+  $("connectError").textContent = "";
+  $("connectButton").disabled = true;
+
+  try {
+    const text = $("connectionInput").value;
+    // 先验证格式，再关闭弹窗，避免自动恢复登录时与密码弹窗重叠。
+    parseConnection(text);
+    $("connectDialog").close();
+    const changed = await applyConnection(text);
+    if (changed) toast("连接信息已保存。");
+  } catch (error) {
+    if (!$("connectDialog").open) $("connectDialog").showModal();
+    $("connectError").textContent = error.message;
+  } finally {
+    $("connectButton").disabled = false;
+  }
+};
+
+document.querySelectorAll("[data-close]").forEach(button => {
+  button.onclick = () => $(button.dataset.close).close();
+});
+
+$("scanDialog").addEventListener("close", stopScanner);
+$("scanFallback").onclick = () => {
+  $("scanDialog").close();
+  showConnectionDialog();
+};
+
+$("scanImageButton").onclick = () => $("scanImageInput").click();
+
+$("scanImageInput").onchange = async event => {
+  const file = event.target.files?.[0];
+  if (!file) return;
+
+  $("scanError").textContent = "";
+
+  try {
+    if (file.size > 15 * 1024 * 1024) throw Error("请选择小于 15 MB 的二维码图片。");
+    if (!state.scanDetector) await prepareDetector();
+
+    const bitmap = await createImageBitmap(file);
+    let codes;
+    try { codes = await state.scanDetector.detect(bitmap); }
+    finally { bitmap.close(); }
+
+    let accepted = false;
+    for (const code of codes) {
+      if (await acceptScan(code.rawValue)) { accepted = true; break; }
+    }
+    if (!accepted) throw Error("图片里没有识别到有效邀请二维码。");
+  } catch (error) {
+    $("scanError").textContent = error.message;
+  } finally {
+    event.target.value = "";
+  }
+};
+
+$("menuButton").onclick = () => {
+  $("sidebar").classList.toggle("open");
+  $("sidebarBackdrop").classList.toggle("open");
+};
+$("sidebarBackdrop").onclick = closeSidebar;
+
+$("shareSidebar").onclick = openShare;
+$("shareHeader").onclick = openShare;
+
+$("copyCode").onclick = async () => {
+  try {
+    await copyText("火星连接码：" + connectionCode());
+    toast("连接码已复制，可以发给朋友了。");
+  } catch (error) { toast(error.message); }
+};
+
+$("copyInvite").onclick = async () => {
+  try {
+    await copyText(inviteLink());
+    toast("邀请链接已复制。");
+  } catch (error) { toast(error.message); }
+};
+
+$("nativeShare").onclick = async () => {
+  try {
+    await navigator.share({
+      title: "去火星了也能聊",
+      text: "地球分站集合！打开链接，用你的聊天账号登录。",
+      url: inviteLink()
+    });
+  } catch (error) {
+    if (error.name !== "AbortError") toast("分享未完成，可以复制邀请链接。");
+  }
+};
+
+$("reconnectButton").onclick = () => {
+  state.retries = 0;
+  connectSocket();
+};
+
+$("messageForm").onsubmit = sendMessage;
+
+$("messageInput").oninput = () => {
+  const input = $("messageInput");
+  input.style.height = "auto";
+  input.style.height = Math.min(input.scrollHeight, 145) + "px";
+  $("sendButton").disabled = !state.ready || !input.value.trim();
+};
+
+$("messageInput").onkeydown = event => {
+  if (
+    event.key === "Enter" &&
+    !event.shiftKey &&
+    !event.isComposing &&
+    matchMedia("(pointer:fine)").matches
+  ) {
+    event.preventDefault();
+    sendMessage();
+  }
+};
+
+$("loadOlder").onclick = async () => {
+  const before = lowestMessageId();
+  if (!Number.isFinite(before)) return;
+
+  const generation = state.generation;
+  $("loadOlder").disabled = true;
+
+  try {
+    const result = await api("history?before=" + before);
+    if (generation !== state.generation || !state.user) return;
+
+    const messages = result.messages || [];
+    for (const message of messages) state.messages.set(message.id, message);
+    state.hasOlder = messages.length >= 100;
+    renderMessages(true);
+  } catch (error) {
+    toast(error.message);
+  } finally {
+    $("loadOlder").disabled = false;
+  }
+};
+
+$("profileButton").onclick = () => openProfile();
+$("closeProfile").onclick = () => $("profileDialog").close();
+
+$("profileDialog").addEventListener("cancel", event => {
+  if (state.user?.must_change) event.preventDefault();
+});
+
+$("profileForm").onsubmit = async event => {
+  event.preventDefault();
+  $("profileError").textContent = "";
+  $("saveProfile").disabled = true;
+
+  try {
+    const password = $("newPassword").value;
+    const forced = !!state.user.must_change;
+
+    if (password || forced) {
+      if (password.length < 8) throw Error("新密码至少需要 8 个字符。");
+      if (password !== $("confirmPassword").value) throw Error("两次输入的新密码不一致。");
+
+      await api("password", {
+        method: "POST",
+        body: JSON.stringify({
+          current: $("currentPassword").value,
+          password
+        })
+      });
+
+      state.user.must_change = 0;
+    }
+
+    const nickname = $("nicknameInput").value.trim();
+
+    if (!forced && nickname !== state.user.nickname) {
+      if (!nickname) throw Error("昵称不能为空。");
+
+      await api("profile", {
+        method: "POST",
+        body: JSON.stringify({ nickname })
+      });
+
+      state.user.nickname = nickname;
+      updateMyProfile();
+    }
+
+    $("currentPassword").value = "";
+    $("newPassword").value = "";
+    $("confirmPassword").value = "";
+    $("profileDialog").close();
+    toast("已保存，地球身份更新完毕。");
+    if (!state.ready) connectSocket();
+  } catch (error) {
+    $("profileError").textContent = error.message;
+  } finally {
+    $("saveProfile").disabled = false;
+  }
+};
+
+$("logoutButton").onclick = () => {
+  if (state.pending.size && !confirm("退出会清除本页未确认的消息，继续吗？")) return;
+  logout();
+};
+
+window.addEventListener("online", () => {
+  if (state.user && !state.user.must_change) connectSocket();
+  else checkHealth(true);
+});
+
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden && state.user && !state.user.must_change && !state.ready) {
+    connectSocket();
+  }
+});
+
+window.addEventListener("pagehide", stopScanner);
+
+/* 初始化 */
+(function initialize() {
+  let supplied = "";
+  const fragment = new URLSearchParams(location.hash.slice(1));
+
+  if (fragment.has("server")) supplied = fragment.get("server");
+  else if (fragment.has("code")) supplied = fragment.get("code");
+
+  if (supplied) {
+    try {
+      state.endpoint = parseConnection(supplied);
+      storage.set("mars-endpoint", state.endpoint);
+    } catch (error) {
+      $("loginError").textContent = error.message;
+    }
+
+    // 地址已保存在当前设备，收起长链接。
+    try { history.replaceState(null, "", location.pathname + location.search); }
+    catch {}
+  }
+
+  if (!state.endpoint) {
+    const saved = DEFAULT_SERVER || storage.get("mars-endpoint");
+    if (saved) {
+      try { state.endpoint = parseConnection(saved); }
+      catch {}
+    }
+  }
+
+  // 直接由电脑端服务器打开时，可使用同源连接。
+  if (!state.endpoint &&
+      ["127.0.0.1", "localhost"].includes(location.hostname)) {
+    try { state.endpoint = normalizeEndpoint(location.origin); }
+    catch {}
+  }
+
+  state.token = state.endpoint ? storage.get(tokenKey()) : "";
+  updateConnectionHint();
+  checkHealth(true);
+})();
+</script>
+</body>
+</html>
